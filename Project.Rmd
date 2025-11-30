@@ -1,0 +1,207 @@
+---
+title: "Formula one analysis"
+output:
+  html_document:
+    self_contained: yes
+    toc: yes
+    toc_float: yes
+    code_folding: hide
+    df_print: "default"
+urlcolor: blue
+---
+
+```{r setup, include = FALSE}
+# Global chunk options: hide code, suppress messages/warnings
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center",
+  fig.width = 7,
+  fig.height = 4.5
+)
+```
+**Author**  
+Leslie Huh, Nick Jitjang, Shria Parupudi, Sohum Walavalkar
+
+
+***
+***
+
+
+# Project Overview
+
+### Motivation
+Detailed item (rated 0 to 4). What is the quality of these elements? Does the title tell us what to
+expect of the report to follow? Does the motivation section convince the reader that the broader study
+of this data set could elicit interesting insights?
+
+### Dataset Description
+
+Detailed item (rated 0 to 5). What is the quality of this description? Does it clearly communicate what
+the rows and columns (i.e., observations and variables) are in the dataset in a way that is understandable
+to a CMU statistics undergraduate audience?
+
+
+### Research Questions
+
+Detailed item (rated 0 to 5). What is the quality of the research questions? Are they well-motivated by
+real-world/scientific interests? Or are they shallow? For example, a very shallow question would be
+in the form, “what does the distribution of this variable look like?” - three questions like this would
+guarantee 0pts for this item. A more interesting question would motivate why we would like to inspect
+particular distributions with real-world context.
+
+RQ1: [Question phrased in an interesting, real-world way, not just “what is the distribution of X?”]
+
+RQ2: [Question]
+
+RQ3: [Question]
+
+
+***
+***
+
+
+# Research Question 1: 
+
+### Motivation
+[PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
+
+### Visualization 1
+
+[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+
+```{r}
+#graph1
+```
+
+### Interpretation 
+[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+
+### Visualization 2
+
+[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+
+```{r}
+#graph1
+```
+
+### Interpretation 
+[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+
+### Conclusion
+
+[[conclustion for the research question]]
+
+## Further Research
+
+[[further reasrch for resarch question]]
+
+# Research Question 2: 
+### Motivation
+[PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
+
+### Visualization 1
+
+[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+
+```{r}
+#graph1
+```
+
+### Interpretation 
+[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+
+### Visualization 2
+
+[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+
+```{r}
+#graph1
+```
+
+### Interpretation 
+[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+
+### Conclusion
+
+[[conclustion for the research question]]
+
+### Further Research
+
+[[further reasrch for resarch question]]
+
+# Research Question 3: 
+### Motivation
+[PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
+
+### Visualization 1
+
+[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+
+```{r}
+#graph1
+```
+
+### Interpretation 
+[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+
+### Visualization 2
+
+[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+
+```{r}
+#graph1
+```
+
+### Interpretation 
+[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+
+### Conclusion
+
+[[conclustion for the research question]]
+
+### Further Research
+
+[[further reasrch for resarch question]]
+
+# Research Question 4: 
+### Motivation
+[PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
+
+### Visualization 1
+
+[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+
+```{r}
+#graph1
+```
+
+### Interpretation 
+[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+
+### Visualization 1
+
+[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+
+```{r}
+#graph1
+```
+
+### Interpretation 
+[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+
+### Conclusion
+
+[[conclustion for the research question]]
+
+### Further Research
+
+[[further reasrch for resarch question]]
+
+# Wrapping up
+
+
+
+
+
