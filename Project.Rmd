@@ -68,7 +68,11 @@ RQ3: [Question]
 [PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
 
 ### Visualization 1
-
+Detailed item (0 to 5). What is the quality of these graphs? Are these graphs easily readable,
+interpretable, and properly labeled?
+• Detailed item (0 to 5). Are the graphs well-motivated, given the research questions of the project?
+In other words, do the graphs address/answer the research questions of the project, or do they only
+provide tangential (or even irrelevant) details?
 [[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
 
 ```{r}
@@ -77,7 +81,8 @@ RQ3: [Question]
 
 ### Interpretation 
 [PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
-
+ Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
+crystal clear what is being displayed in the graph and what the main takeaways are?
 ### Visualization 2
 
 [[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
@@ -88,21 +93,40 @@ RQ3: [Question]
 
 ### Interpretation 
 [PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
+crystal clear what is being displayed in the graph and what the main takeaways are?
 
 ### Conclusion
 
-[[conclustion for the research question]]
+Does the report provide some clear conclusions that can be made from their
+graphs and analyses?
+• Detailed item (0 to 6). What is the accuracy of the claims being made? Are the claims well-supported
+by the graphs and analyses presented? Are the conclusions well-aligned with the research questions of
+the project?
 
-## Further Research
+### Further Research
 
-[[further reasrch for resarch question]]
+Does the report discuss questions that have not been answered by the
+project, but could be answered with future work?
+• Detailed item (0 to 4). Did the team provide adequate reasons as to why these questions were left as
+future work (e.g., they need more data, need more nuanced statistical techniques they haven’t learned,
+etc.)? Are these future-work questions well-motivated given what the team has completed for this
+project?
+
+***
+***
 
 # Research Question 2: 
+
 ### Motivation
 [PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
 
 ### Visualization 1
-
+Detailed item (0 to 5). What is the quality of these graphs? Are these graphs easily readable,
+interpretable, and properly labeled?
+• Detailed item (0 to 5). Are the graphs well-motivated, given the research questions of the project?
+In other words, do the graphs address/answer the research questions of the project, or do they only
+provide tangential (or even irrelevant) details?
 [[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
 
 ```{r}
@@ -111,7 +135,8 @@ RQ3: [Question]
 
 ### Interpretation 
 [PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
-
+ Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
+crystal clear what is being displayed in the graph and what the main takeaways are?
 ### Visualization 2
 
 [[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
@@ -122,21 +147,39 @@ RQ3: [Question]
 
 ### Interpretation 
 [PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
+crystal clear what is being displayed in the graph and what the main takeaways are?
 
 ### Conclusion
 
-[[conclustion for the research question]]
+Does the report provide some clear conclusions that can be made from their
+graphs and analyses?
+• Detailed item (0 to 6). What is the accuracy of the claims being made? Are the claims well-supported
+by the graphs and analyses presented? Are the conclusions well-aligned with the research questions of
+the project?
 
 ### Further Research
 
-[[further reasrch for resarch question]]
+Does the report discuss questions that have not been answered by the
+project, but could be answered with future work?
+• Detailed item (0 to 4). Did the team provide adequate reasons as to why these questions were left as
+future work (e.g., they need more data, need more nuanced statistical techniques they haven’t learned,
+etc.)? Are these future-work questions well-motivated given what the team has completed for this
+project?
+
+***
+***
 
 # Research Question 3: 
 ### Motivation
 [PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
 
 ### Visualization 1
-
+Detailed item (0 to 5). What is the quality of these graphs? Are these graphs easily readable,
+interpretable, and properly labeled?
+• Detailed item (0 to 5). Are the graphs well-motivated, given the research questions of the project?
+In other words, do the graphs address/answer the research questions of the project, or do they only
+provide tangential (or even irrelevant) details?
 [[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
 
 ```{r}
@@ -145,7 +188,8 @@ RQ3: [Question]
 
 ### Interpretation 
 [PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
-
+ Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
+crystal clear what is being displayed in the graph and what the main takeaways are?
 ### Visualization 2
 
 [[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
@@ -156,20 +200,51 @@ RQ3: [Question]
 
 ### Interpretation 
 [PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
+crystal clear what is being displayed in the graph and what the main takeaways are?
 
 ### Conclusion
 
-[[conclustion for the research question]]
+Does the report provide some clear conclusions that can be made from their
+graphs and analyses?
+• Detailed item (0 to 6). What is the accuracy of the claims being made? Are the claims well-supported
+by the graphs and analyses presented? Are the conclusions well-aligned with the research questions of
+the project?
 
 ### Further Research
 
-[[further reasrch for resarch question]]
+Does the report discuss questions that have not been answered by the
+project, but could be answered with future work?
+• Detailed item (0 to 4). Did the team provide adequate reasons as to why these questions were left as
+future work (e.g., they need more data, need more nuanced statistical techniques they haven’t learned,
+etc.)? Are these future-work questions well-motivated given what the team has completed for this
+project?
+
+***
+***
 
 # Research Question 4: 
+
 ### Motivation
 [PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
 
 ### Visualization 1
+Detailed item (0 to 5). What is the quality of these graphs? Are these graphs easily readable,
+interpretable, and properly labeled?
+• Detailed item (0 to 5). Are the graphs well-motivated, given the research questions of the project?
+In other words, do the graphs address/answer the research questions of the project, or do they only
+provide tangential (or even irrelevant) details?
+[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+
+```{r}
+#graph1
+```
+
+### Interpretation 
+[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+ Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
+crystal clear what is being displayed in the graph and what the main takeaways are?
+### Visualization 2
 
 [[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
 
@@ -179,25 +254,28 @@ RQ3: [Question]
 
 ### Interpretation 
 [PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
-
-### Visualization 1
-
-[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
-
-```{r}
-#graph1
-```
-
-### Interpretation 
-[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
+Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
+crystal clear what is being displayed in the graph and what the main takeaways are?
 
 ### Conclusion
 
-[[conclustion for the research question]]
+Does the report provide some clear conclusions that can be made from their
+graphs and analyses?
+• Detailed item (0 to 6). What is the accuracy of the claims being made? Are the claims well-supported
+by the graphs and analyses presented? Are the conclusions well-aligned with the research questions of
+the project?
 
 ### Further Research
 
-[[further reasrch for resarch question]]
+Does the report discuss questions that have not been answered by the
+project, but could be answered with future work?
+• Detailed item (0 to 4). Did the team provide adequate reasons as to why these questions were left as
+future work (e.g., they need more data, need more nuanced statistical techniques they haven’t learned,
+etc.)? Are these future-work questions well-motivated given what the team has completed for this
+project?
+
+***
+***
 
 # Wrapping up
 
