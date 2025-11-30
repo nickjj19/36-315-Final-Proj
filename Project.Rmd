@@ -1,5 +1,5 @@
 ---
-title: "Formula one analysis"
+title: "The Evolution of Speed and Performance in Formula 1"
 output:
   html_document:
     self_contained: yes
@@ -51,67 +51,142 @@ in the form, “what does the distribution of this variable look like?” - thre
 guarantee 0pts for this item. A more interesting question would motivate why we would like to inspect
 particular distributions with real-world context.
 
-RQ1: [Question phrased in an interesting, real-world way, not just “what is the distribution of X?”]
+**RQ1: How have race pace and reliability changed over time across eras?**
 
-RQ2: [Question]
+**RQ2: How Do Drivers’ Lap Times Change Over the Course of a Race?**
 
-RQ3: [Question]
+**RQ3: How Does Qualifying Performance Affect Final Race Outcomes?**
 
+**RQ4: How Do Pit Stop Durations Influence Race Finishes and Season Rankings?**
 
 ***
 ***
 
 
-# Research Question 1: 
+# Research Question 1: How have race pace and reliability changed over time across eras?
 
 ### Motivation
-[PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
+In Formula 1, both race pace and reliability largely dictate how each driver performs. The faster the race pace, the faster the driver can drive, which increases their chance of winning. On the other hand, reliability is also a critical factor as cars need to be able to finish the race without problems that would interfere with the driving. Therefore, it would be worthwhile for us to investigate these two factor and how they evolve over time as teams adopt new engine regulations and introduce new technologies. Because engine eras are strongly tied to performance and durability, studying how fastest-lap speeds and DNF (Did Not Finish) rates change across eras would help us understand whether newer regulations made cars faster or more reliable. This is espcially interesting as F1 is making a transtion from bigger more powerful engine to a smaller engine that features more technonology and more friendly to the environment. Thus, the two graphs below would help us understand how reliability and race has evolved over time.
+
+Note: for this question, we will only focus on 1989 - 2024 even though the dataset has information starting from 1950. This is because the data for fastest lap, which is used to interpret the race pace section, does not have data before 1989. Thus, to make the eras consistent for the two graphs, we will focus on 1989-2024 or the "modern era".
 
 ### Visualization 1
-Detailed item (0 to 5). What is the quality of these graphs? Are these graphs easily readable,
-interpretable, and properly labeled?
-• Detailed item (0 to 5). Are the graphs well-motivated, given the research questions of the project?
-In other words, do the graphs address/answer the research questions of the project, or do they only
-provide tangential (or even irrelevant) details?
-[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+This graph displays how race reliability evolves over time by plotting:
+
+- x-axis: year
+
+- y-axis: mean DNF rate per race in that season
+
+- color: engine/technical era (The F1 eras aren't given to us directly from the dataset, but we are able to make that up using public information on what kind of engines were use during each year to creating grouping.)
+
+A time-series line plot is appropriate here as we are tracking how a different engines eras changes over chronological time and what impact that those has on the average DNF rates for each race aggregated across the different years. The plot provides a good concrete performance metric to assess the reliability of F1 cars over time. Since we can't really measure "reliability" directly, the graph helps us interpret this information by coming up with a measurement of DNF per season that highlights how reliability is increasing or decreasing. Thus, we are able to answer the original question for the reliability part that the reliability have been increasing over the time and eras of F1.
 
 ```{r}
-#graph1
+library(tidyverse)
+
+
+results <- read_csv("results.csv")
+races   <- read_csv("races.csv")
+status  <- read_csv("status.csv")
+classified_keywords <- c("Finished", "Lap")
+f1_reliability <- results %>%
+  inner_join(races,  by = "raceId") %>%
+  inner_join(status, by = "statusId") %>%
+  group_by(raceId, year, name) %>%
+  summarise(
+    starters = n(),
+    dnfs     = sum(!str_detect(status, paste(classified_keywords, collapse = "|"))),
+    dnf_rate = dnfs / starters,
+    .groups  = "drop"
+  ) %>%
+  mutate(
+    era = case_when(
+      year >= 1989 & year <= 2005 ~ "1989–2005: 3.0/3.5L V10/V8",
+      year >= 2006 & year <= 2013 ~ "2006–13: 2.4L V8",
+      year >= 2014               ~ "2014– : 1.6L V6 turbo-hybrid",
+      TRUE                       ~ NA_character_
+    )
+  ) %>%
+  tidyr::drop_na(era)
+
+f1_reliability_year <- f1_reliability %>%
+  group_by(year, era) %>%
+  summarise(
+    mean_dnf_rate = mean(dnf_rate),
+    .groups       = "drop"
+  )
+
+f1_reliability_year %>%
+  ggplot(aes(x = year,
+             y = mean_dnf_rate,
+             color = era,
+             group = era)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Formula 1 Reliability Over Time by Engine/Technical Era",
+    x     = "Season (year)",
+    y     = "Average DNF rate per race",
+    color = "Engine / technical era"
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1))
 ```
 
 ### Interpretation 
-[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
- Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
-crystal clear what is being displayed in the graph and what the main takeaways are?
+
+We can observe a clear downward trend in DNF rates across eras, showing that the reliability of the F1 cars have increased significantly over the years as they are switching to a more reliable engine and the DNF per season is going down. The most interesting era is the 1989-2005 era when the average DNF goes down drastically over the year when F1 cars were using v8 and v10 engines. This is a very important time of F1 as F1 was still focusing largely on naturally aspirated engines. Then, in the 2.4L V8 era from 2006-2013, the DNF rates jumps to a higher level compared to the last year of the previous era, but starts decreasing to lower level than the previous era after that. The 1.6L hybrid era from 2014 - present (2024) shows a similar trend where the DNF rate jumps to a higher level initially and decreases, showing the lowest DNF levels overall. Thus, we see a trend here where the DNF rates are decreasing for each era as time progresses, and the DNF rate can spike a little when there is a transition. However, a newer and more technological advanced engine still achieves a lower DNF rate than the previous era. Therefore, the steady decline across eras suggests that engineering, safety, and component durability have all improved substantially.
+
+
 ### Visualization 2
 
-[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+This plot shows how the race pace of winning drivers changes across three modern engine eras by plotting:
+
+- x-axis: engine/technical era 
+
+- y-axis: winner’s fastest lap speed
+
+A boxplot is used here because it summarizes the full distribution of lap speeds within each era (median, quartiles, and variability). By examining the fastest-lap speed, we can measure how race pace, how variable of interest, changes over the time as faster lap speed corresponds to faster race pace. Since pace is a continuous measurement and eras are categorical, boxplots allow us to  compare of how pace distributions shift across eras to help us answer our research question for the race pace part.
 
 ```{r}
-#graph1
+f1_pace <- results %>%
+  filter(positionOrder == 1) %>%
+  mutate(
+    # Treat "\N" as missing, then convert to numeric
+    fastestLapSpeed = na_if(fastestLapSpeed, "\\N"),
+    fastestLapSpeed = as.numeric(fastestLapSpeed)
+  ) %>%
+  drop_na(fastestLapSpeed) %>%
+  inner_join(races, by = "raceId") %>%
+  mutate(
+    era = case_when(
+      year >= 1989 & year <= 2005 ~ "1989–2005: 3.0/3.5L V10/V8",
+      year >= 2006 & year <= 2013 ~ "2006–13: 2.4L V8",
+      year >= 2014               ~ "2014– : 1.6L V6 turbo-hybrid",
+      TRUE                       ~ NA_character_ 
+    )
+  ) %>%
+  drop_na(era)
+
+f1_pace %>%
+  ggplot(aes(x = era, y = fastestLapSpeed)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Winner's Fastest Lap Speed by Engine/Technical Era",
+    x     = "Engine / technical era",
+    y     = "Winner's fastest lap speed (km/h)"
+  ) 
 ```
 
 ### Interpretation 
-[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
-Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
-crystal clear what is being displayed in the graph and what the main takeaways are?
+The boxplot shows an interesting insight of the race pace across eras. First, we can see that peak lap speeds were highest in the 1989–2005 V10/V8 era, reflecting powerful naturally-aspirated engines shown by the outlines. We can also see that the median speed for this V10/V8 era is also the highest among the three eras, and that the distribution seems to be the least variable as the box and line are not wide compared to the other eras, suggesting that the bigger engines seem to allow for faster and more consistent lap speed. Looking at the 2.4L V8 era, the median fastest lap speed seems to be the lowest among the three eras as F1 makes a transition to a smaller engine. This is further supported by looking at the lower whisker where this era has the lowest lap speed overall. However, within the hybrid era, the upper whiskers and median rise again, indicating that hybrid technology has steadily improved over time. We can also see that the upper whiskers is higher than the V10/V8 era in addition to the line being taller. Thus, we can see that the race pace is improving within this era again, although it may not be as consistent as the old big naturally aspirated V10/V8 era. Therefore, this supports the idea that engine regulation changes meaningfully affect race pace.
 
 ### Conclusion
 
-Does the report provide some clear conclusions that can be made from their
-graphs and analyses?
-• Detailed item (0 to 6). What is the accuracy of the claims being made? Are the claims well-supported
-by the graphs and analyses presented? Are the conclusions well-aligned with the research questions of
-the project?
+The two visuals collectively show that race pace and reliability were definitely influence by the engines and technical eras of Formula 1. As we make more technological advancement and engineering changes from bigger engines to a smaller and more environmentally friendly engine, we see a fluctuations in performance and reliability, affecting how the sport needs to adapt to changing rule and condition. First, We can see that the overall trend for reliability has been on a positive side where the engines are becoming more and more reliable with each passing year as DNF rate has been decreasing throughout with some fluctuations transitioning from era to era. Even though we get a more reliable engine, we can also see that the smaller engine seems to be slowing down the race pace over the year as there is more variability in the fastest lap speed from the two latest eras. However, the most recent hybrid era seems to be catching up with the old big engine as the sport continues to make engineering advancements. Therefore, the engine eras positively affects the reliability as it has been improving over time while the race pace struggled initally due to smaller engine, but are improving with the recent hybrid advancement.
 
 ### Further Research
 
-Does the report discuss questions that have not been answered by the
-project, but could be answered with future work?
-• Detailed item (0 to 4). Did the team provide adequate reasons as to why these questions were left as
-future work (e.g., they need more data, need more nuanced statistical techniques they haven’t learned,
-etc.)? Are these future-work questions well-motivated given what the team has completed for this
-project?
+While our analysis provides an interesting insight, it is still limited due to only using a few factor to consider a large question. In other words, our work only focuses on DNF to measure reliability and fastest lap speed to consider race pace. Future work could explore several unanswered questions about race pace and reliability and go in more detail for each. For instance, while reliability generally improves across eras, variability within periods like the early V10/V8 era suggests underlying technical or circuit-specific factors not captured in our dataset. We could analyze the weather, tire strategies, or also examining the cause of DNF (which can be caused by a crash rather than the car's fault) to fully unfold how each affect race pace and reliability as team makes different decisions to try to win the race. Additionally, our current analysis focuses only on winners’ pace while richer insights could come from examining all-driver pace distributions (which is not captured by the dataset) to make sure that the data is more representative of the full era. These directions were beyond the scope of this project due to data limitations and the need for more advanced statistical methods, but they could lead to a more complete understanding of how F1 technology and regulations shape on-track performance.
 
 ***
 ***
@@ -137,6 +212,8 @@ provide tangential (or even irrelevant) details?
 [PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
  Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
 crystal clear what is being displayed in the graph and what the main takeaways are?
+
+
 ### Visualization 2
 
 [[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
@@ -190,6 +267,8 @@ provide tangential (or even irrelevant) details?
 [PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
  Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
 crystal clear what is being displayed in the graph and what the main takeaways are?
+
+
 ### Visualization 2
 
 [[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
@@ -244,6 +323,8 @@ provide tangential (or even irrelevant) details?
 [PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
  Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
 crystal clear what is being displayed in the graph and what the main takeaways are?
+
+
 ### Visualization 2
 
 [[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
