@@ -1,0 +1,91 @@
+---
+title: "315_shria"
+output: html_document
+date: "2025-11-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+setwd("/Users/shriaparupudi/Downloads/315 Project")
+
+library(tidyverse)
+
+results    <- read_csv("results.csv")
+qualifying <- read_csv("qualifying.csv")
+races      <- read_csv("races.csv")
+drivers    <- read_csv("drivers.csv")
+
+# driver-race level data: merge results + qualifying + race info
+driver_race <- results %>%
+  filter(!is.na(positionOrder)) %>%               
+  inner_join(qualifying %>%
+      select(raceId, driverId, quali_position = position),
+    by = c("raceId", "driverId")) %>%
+  inner_join(races %>% select(raceId, year), by = "raceId")
+
+# aggregate to driver-season level (so each row = 1 driver in 1 year)
+driver_season <- driver_race %>%
+  filter(year >= 2006) %>%                        
+  group_by(driverId, year) %>%
+  summarise(
+    races          = n(),
+    avg_quali_pos  = mean(quali_position, na.rm = TRUE),
+    avg_grid_pos   = mean(grid, na.rm = TRUE),
+    avg_finish_pos = mean(positionOrder, na.rm = TRUE),
+    avg_pos_change = mean(grid - positionOrder, na.rm = TRUE),
+    total_points   = sum(points, na.rm = TRUE),
+    .groups = "drop") %>%
+  filter(races >= 5) %>%                        
+  inner_join(drivers %>%
+      mutate(driver_name = paste(forename, surname)) %>%
+      select(driverId, driver_name),
+    by = "driverId")
+
+# numeric matrix for clustering (prof-style)
+f1_quant <- driver_season %>%
+  select(avg_quali_pos, avg_finish_pos, avg_pos_change, total_points) %>%
+  as.data.frame()
+
+rownames(f1_quant) <- paste(driver_season$driver_name, driver_season$year)
+
+# scale (divide by SD only), distance, hierarchical clustering
+f1_scaled <- scale(
+  f1_quant,
+  center = FALSE,
+  scale  = apply(f1_quant, 2, sd, na.rm = TRUE))
+
+f1_dist <- dist(f1_scaled)
+hc_complete <- hclust(f1_dist, method = "complete")
+
+# cut tree to get cluster labels
+k <- 4   # you can try 3, 4, 5 and see what makes sense
+driver_season$cluster <- factor(cutree(hc_complete, k = k))
+
+table(driver_season$cluster)
+
+# plot: avg qualifying vs avg finish, coloured by cluster
+
+ggplot(driver_season, aes(x = avg_quali_pos, y = avg_finish_pos, colour = cluster)) + geom_point() +
+  scale_x_reverse() +   
+  scale_y_reverse() +   
+  labs(x = "Average qualifying position (1 = best)", y = "Average finishing position (1 = best)", title = "How qualifying relates to race results (F1 driver seasons)", colour = "Cluster") 
+
+
+# make a simple quali group 
+
+driver_season$quali_group <- "Back"
+driver_season$quali_group[driver_season$avg_quali_pos <= 10] <- "Mid"
+driver_season$quali_group[driver_season$avg_quali_pos <= 5]  <- "Front"
+
+# plot 2: density of avg positions gained
+
+ggplot(driver_season, aes(x = avg_pos_change, colour = quali_group)) +
+  geom_density() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  labs(x = "Avg positions gained (grid-finish)", y = "Density",
+       colour = "Quali group", title = "Race-day gains/losses by qualifying group")
+```
+
