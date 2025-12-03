@@ -1,0 +1,33 @@
+---
+title: "36315 Final Project"
+output: html_document
+date: "2025-12-03"
+---
+
+```{r cars}
+# here's the data: https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?resource=download&select=lap_times.csv
+
+library(ggplot2)
+library(tidyverse)
+
+laps <- read_csv("/Users/sohumwalavalkar/Downloads/lap_times.csv")
+
+race1 <- laps %>% filter(raceId == 1)
+
+ggplot(race1, aes(x = lap, y = milliseconds, color = as.factor(driverId))) +
+  geom_line(alpha = 0.5) +
+  labs(
+    title = "Time Series Plot of Lap Time by Driver (Race 1)",
+    x = "Lap Number",
+    y = "Lap Time in ms)"
+  )
+
+ggplot(race1, aes(x = as.factor(driverId), y = milliseconds)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Lap Times by Driver (Race 1)",
+    x = "Driver ID",
+    y = "Lap Time (ms)"
+  )
+
+```
