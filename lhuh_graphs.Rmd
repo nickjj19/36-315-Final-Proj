@@ -1,0 +1,80 @@
+---
+title: "Pit Stop Impact on Race and Season Finish"
+author: "Leslie Huh"
+date: "2025-12-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importing Data / Installing Dependencies
+```{r}
+library(tidyverse)
+
+pitstops <- read.csv('pit_stops.csv')
+results <- read.csv('results.csv')
+drivers <- read.csv('driver_standings.csv')
+```
+
+## Matching Data from Different Tables
+```{r}
+f1_data <- pitstops %>%
+  # Select from pitstops
+  select(driverId, raceId, duration) %>%
+  # Join race results (race finish position)
+  left_join(
+    results %>% 
+      select(driverId, raceId, race_finish = position),
+    by = c("driverId", "raceId")
+  ) %>%
+  left_join(
+    drivers %>%
+      select(driverId, raceId, season_finish = position),
+    by = c("driverId", "raceId")
+  )
+
+library(dplyr)
+library(ggplot2)
+f1_data <- f1_data %>%
+  mutate(race_finish = as.numeric(race_finish),
+         season_finish = as.numeric(season_finish),
+         duration = as.numeric(duration))
+
+heatmap_df <- f1_data %>%
+  group_by(season_finish, race_finish) %>%
+  summarize(avg_duration = mean(duration, na.rm = TRUE), .groups = "drop") 
+```
+
+## Graph 1: Heatmap
+```{r}
+ggplot(heatmap_df, aes(x = race_finish, y = season_finish, fill = avg_duration)) +
+  geom_tile(color = "white") +
+  scale_fill_viridis_c(option = "plasma", name = "Avg Pitstop (s)") +
+  labs(
+    title = "Pitstop Duration vs Race Finish and Season Finish",
+    x = "Race Finish Position",
+    y = "Season Finish Position"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    text = element_text(size = 12)
+  )
+```
+
+## Graph 2: Scatterplot
+```{r}
+# Scatterplot
+ggplot(f1_data, aes(x = duration, y = race_finish, color = season_finish)) +
+  geom_point(alpha = 0.7) +
+  scale_y_reverse() +  # P1 is best, so reverse axis for intuitive direction
+  scale_color_viridis_c(option = "plasma", direction = -1) +
+  labs(
+    title = "Impact of Pit Stop Duration on Race Result and Season Finish",
+    x = "Pit Stop Duration (seconds)",
+    y = "Race Finish Position",
+    color = "Season Finish"
+  )
+```
