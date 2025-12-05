@@ -32,9 +32,7 @@ Leslie Huh, Nick Jitjang, Shria Parupudi, Sohum Walavalkar
 # Project Overview
 
 ### Motivation
-Detailed item (rated 0 to 4). What is the quality of these elements? Does the title tell us what to
-expect of the report to follow? Does the motivation section convince the reader that the broader study
-of this data set could elicit interesting insights?
+hello 
 
 ### Dataset Description
 
