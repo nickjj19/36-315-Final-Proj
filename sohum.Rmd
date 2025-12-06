@@ -30,4 +30,9 @@ ggplot(race1, aes(x = as.factor(driverId), y = milliseconds)) +
     y = "Lap Time (ms)"
   )
 
+anova_model <- aov(milliseconds ~ as.factor(race1$driverId), data = race1)
+
+# View ANOVA table
+summary(anova_model)
+
 ```
