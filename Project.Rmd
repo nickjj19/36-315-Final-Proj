@@ -190,58 +190,95 @@ While our analysis provides an interesting insight, it is still limited due to o
 ***
 ***
 
-# Research Question 2: 
+# Research Question 2: How Do Drivers’ Lap Times Change Over the Course of a Race?
 
 ### Motivation
-[PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
+
+In Formula 1 Races, it’s clear that a driver’s lap time is a direct measurement of their performance. Drivers need to obtain the lowest lap times while balancing competitors’ effects, fuel efficiency, pit stops, and other dependencies that influence their performance. Lap times may vary during the course of a race as a byproduct of these covariants. For example, a driver may have one or two really slow laps due to stopping for a pit stop in the middle of their race. Understanding overall how a driver’s lap times change over the course of a race is valuable as it allows for dive more in-depth analysis than just analyzing final times and positions allows for significant real-world implications; for example, enabling drivers to analyze their distinct races in efforts to optimize performance in the future.
 
 ### Visualization 1
-Detailed item (0 to 5). What is the quality of these graphs? Are these graphs easily readable,
-interpretable, and properly labeled?
-• Detailed item (0 to 5). Are the graphs well-motivated, given the research questions of the project?
-In other words, do the graphs address/answer the research questions of the project, or do they only
-provide tangential (or even irrelevant) details?
-[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+
+This graph displays how drivers’ lap times change throughout Race 1 of the dataset by plotting:
+
+- x-axis: Lap Number
+- y-axis: Lap Time (in milliseconds)
+- color: Driver ID
+
+A Time Series Plot is appropriate for answering the question: in race 1 in the dataset, how does drivers’ lap times change over the laps in the race? Here, each lap number presents a chronological time period within a race, and lap time is the performance metric that changes over the course of a race. 
 
 ```{r}
-#graph1
+# here's the data: https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020?resource=download&select=lap_times.csv
+
+library(ggplot2)
+library(tidyverse)
+
+laps <- read_csv("/Users/sohumwalavalkar/Downloads/lap_times.csv")
+
+race1 <- laps %>% filter(raceId == 1)
+
+ggplot(race1, aes(x = lap, y = milliseconds, color = as.factor(driverId))) +
+  geom_line(alpha = 0.5) +
+  labs(
+    title = "Time Series Plot of Lap Time by Driver (Race 1)",
+    x = "Lap Number",
+    y = "Lap Time (ms)"
+  )
 ```
 
-### Interpretation 
-[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
- Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
-crystal clear what is being displayed in the graph and what the main takeaways are?
+### Interpretation
+
+Here, we can analyze how performance changes during a specific race and by driver. To analyze this, we can plot a time series plot where each driver’s lap time is plotted for each lap number. From the graph, we can see that lap times in general are relatively fast for most drivers, followed by two spikes with a huge spike around lap 21; these spikes may mean that drivers get pit stops at roughly the same lap. Following that, lap times seem to stabilize back to really fast, with a few drivers having spikes. To summarize, across most drivers, the curve of their lap time follows the same pattern; perhaps they have the same strategy. This plot directly answers the question I aimed to address since it shows all 3 variables effectively to show the change in lap times in a race: a time series effectively captures that. Lap number here is the time, lap time measures performance, and the plot is colored by driver ID.
 
 
 ### Visualization 2
 
-[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+This graph shows how lap time performance varies across drivers within Race 1 by plotting: 
+
+- x-axis: Driver ID
+
+- y-axis: Lap Time (in milliseconds)
+
+A Box Plot is appropriate here because we can analyze the distribution of lap times for each driver in a single race. This allows us to evaluate how median, quartiles, and variation of lap times change over the course of a race. This allows to get granular in analyzing how lap-time performance differs between drivers. It’s a direct complement of the previous visualization that provided insight into how lap times change over time. This allows us to determine which drivers were the most consistent across a race and what outliers exist among drivers.
 
 ```{r}
-#graph1
+ggplot(race1, aes(x = as.factor(driverId), y = milliseconds)) +
+  geom_boxplot() +
+  labs(
+    title = "Distribution of Lap Times by Driver (Race 1)",
+    x = "Driver ID",
+    y = "Lap Time (ms)"
+  )
 ```
 
 ### Interpretation 
-[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
-Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
-crystal clear what is being displayed in the graph and what the main takeaways are?
+
+From the plot, we can see that most drivers share a similar median lap time, roughly around 50,0000 ms. However, there exist many outliers amongst all drivers. These outliers are sharp increases from the average lap time of each driver and may be associated with pit stops or race accidents. One driver, driver 12, has significant variation among his lap times relative to their competitors. This suggests that driver 12 may have had a race accident, enabling heavy variation in his lap times. However, further research is needed to investigate this correlation. Some drivers also have relatively less variance than competitors: drivers 6, 18, and 20 maintain consistent lap times across the course of race 1. Overall, while lap times were fairly consistent across drivers, each driver had significant outliers.
+
+### Test
+
+To further test if all drivers have the same mean lap time, we can utilize an ANOVA test. Here we have:
+
+- Null Hypothesis: All drivers have the same mean lap time
+- Alternate Hypothesis: At least one driver’s mean lap time is significantly different
+
+```{r}
+anova_model <- aov(milliseconds ~ as.factor(race1$driverId), data = race1)
+
+summary(anova_model)
+```
+
+### Interpretation
+
+Here, we have an F value of 0.328 with a p-value of 0.996. As the p-value is greater than an alpha of 0.05, we fail to reject the null hypothesis. Thus, we can conclude that there’s no statistically significant difference in drivers’ mean lap times in Race 1. This reaffirms our intuition that drivers shared similar lap times in Race 1. Although every driver had outliers for their lap times, overall, they were pretty consistent relative to each other across the race. 
 
 ### Conclusion
 
-Does the report provide some clear conclusions that can be made from their
-graphs and analyses?
-• Detailed item (0 to 6). What is the accuracy of the claims being made? Are the claims well-supported
-by the graphs and analyses presented? Are the conclusions well-aligned with the research questions of
-the project?
+The visualizations allow us to determine that drivers’ lap times change in a structured and predictable way over the course of a race. From the time series plot, we can see that ap times in general are relatively fast for most drivers, followed by two spikes with a huge spike around lap 21; these spikes may mean that drivers get pit stops at roughly the same lap. Spikes in lap times are represented by the outliers in our second visualization; here, we can see that most drivers maintain similar lap times, but each has outliers. Driver 12 also displays high variance in their lap times from the box plot. It is supported by large spikes in lap times for Driver 12, roughly around lap 21 and again from laps 50 to the end of the race. To reaffirm our intuition that drivers shared similar lap times in Race 1, we conducted an ANOVA test with the null hypothesis that all drivers have the same mean lap time. We determined that there’s no statistically significant difference in drivers’ mean lap times in Race 1. Thus, overall lap times are relatively consistent across drivers and change in predictable ways, signalling dependencies on race strategy, pit stops, and race accidents. 
+
 
 ### Further Research
 
-Does the report discuss questions that have not been answered by the
-project, but could be answered with future work?
-• Detailed item (0 to 4). Did the team provide adequate reasons as to why these questions were left as
-future work (e.g., they need more data, need more nuanced statistical techniques they haven’t learned,
-etc.)? Are these future-work questions well-motivated given what the team has completed for this
-project?
+This study is limited in a couple of ways: it focuses on Race 1 of the dataset and may not be generalizable to all F1 races; further research can extend our analysis to multiple races, tracks, locations, and seasons. Speaking of seasons, this study doesn’t account for external variables that affect lap times, like tire differences and weather conditions. Further research can include these as variables. More research will enable a more granular understanding of how performance evolves throughout a Formula 1 race.
 
 ***
 ***
