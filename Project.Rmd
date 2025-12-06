@@ -32,13 +32,15 @@ Leslie Huh, Nick Jitjang, Shria Parupudi, Sohum Walavalkar
 # Project Overview
 
 ### Motivation
-hello 
+Formula 1 is a sport where very small differences in pace, reliability, and strategy can completely change the outcome of a race. Fans and teams regularly debate what matters most: how fast the cars are over a stint, how reliable they are over a season, whether qualifying position locks in the result, or whether pit stops and race strategy make the real difference. Since almost every aspect of an F1 weekend is measured (lap times, pit stop durations, grid positions, final results) the sport provides a rich setting to study these questions using real data rather than just opinions.
+
+In this project, we use historical F1 data to take a broader view of performance. Instead of focusing on a single race or driver, we combine information across many seasons to look at how pace, reliability, qualifying, and pit stops all contribute to race and season outcomes. This makes the project interesting both from a sports perspective and a statistical perspective as the dataset is large, structured, and naturally lends itself to methods like time series plots, clustering, and PCA that we have learned in class.
 
 ### Dataset Description
 
-Detailed item (rated 0 to 5). What is the quality of this description? Does it clearly communicate what
-the rows and columns (i.e., observations and variables) are in the dataset in a way that is understandable
-to a CMU statistics undergraduate audience?
+We use the Formula 1 World Championship dataset from Kaggle. The main tables we use are:
+
+*insert table 
 
 
 ### Research Questions
@@ -245,57 +247,113 @@ project?
 ***
 ***
 
-# Research Question 3: 
+# Research Question 3: How Does Qualifying Performance Affect Final Race Outcomes?
 ### Motivation
-[PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
+Qualifying is often described as “half the race” in Formula 1, especially on tracks where overtaking is difficult. Teams invest huge effort into one-lap pace and grid position, but on race day we still see drivers moving forward or dropping back. For this research question, I focus on quantifying how strongly qualifying performance is tied to final race outcomes at the season level. In other words, if a driver generally starts near the front, do they reliably finish near the front, and how different is the experience for drivers who usually start in the midfield or at the back?
 
 ### Visualization 1
-Detailed item (0 to 5). What is the quality of these graphs? Are these graphs easily readable,
-interpretable, and properly labeled?
-• Detailed item (0 to 5). Are the graphs well-motivated, given the research questions of the project?
-In other words, do the graphs address/answer the research questions of the project, or do they only
-provide tangential (or even irrelevant) details?
-[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+For the first visualization, I made a scatterplot where each point represents one driver-season. The x axis shows that driver’s average qualifying position for the season, and the y axis shows their average finishing position, with both axes reversed so that smaller numbers (better positions) appear toward the top-right. I color the points using the cluster labels from hierarchical clustering so that seasons with similar qualifying and race performance are grouped visually. This graph directly addresses my question by showing how starting positions and finishing positions move together across seasons, and whether there are clear patterns such as front-running, midfield, and backmarker seasons.
 
 ```{r}
-#graph1
+library(tidyverse)
+
+results <- read_csv("results.csv")
+qualifying <- read_csv("qualifying.csv")
+races <- read_csv("races.csv")
+drivers <- read_csv("drivers.csv")
+
+# driver-race level data: merge results + qualifying + race info
+driver_race <- results %>%
+  filter(!is.na(positionOrder)) %>%               
+  inner_join(qualifying %>%
+      select(raceId, driverId, quali_position = position),
+    by = c("raceId", "driverId")) %>%
+  inner_join(races %>% select(raceId, year), by = "raceId")
+
+# aggregate to driver-season level (so each row = 1 driver in 1 year)
+driver_season <- driver_race %>%
+  filter(year >= 2006) %>%                        
+  group_by(driverId, year) %>%
+  summarise(
+    races          = n(),
+    avg_quali_pos  = mean(quali_position, na.rm = TRUE),
+    avg_grid_pos   = mean(grid, na.rm = TRUE),
+    avg_finish_pos = mean(positionOrder, na.rm = TRUE),
+    avg_pos_change = mean(grid - positionOrder, na.rm = TRUE),
+    total_points   = sum(points, na.rm = TRUE), .groups = "drop") %>%
+  filter(races >= 5) %>%                        
+  inner_join(drivers %>%
+      mutate(driver_name = paste(forename, surname)) %>%
+      select(driverId, driver_name), by = "driverId")
+
+# numeric matrix for clustering (prof-style)
+f1_quant <- driver_season %>%
+  select(avg_quali_pos, avg_finish_pos, avg_pos_change, total_points) %>%
+  as.data.frame()
+
+rownames(f1_quant) <- paste(driver_season$driver_name, driver_season$year)
+
+# scale (divide by SD only), distance, hierarchical clustering
+f1_scaled <- scale(
+  f1_quant,
+  center = FALSE,
+  scale  = apply(f1_quant, 2, sd, na.rm = TRUE))
+
+f1_dist <- dist(f1_scaled)
+hc_complete <- hclust(f1_dist, method = "complete")
+
+# cut tree to get cluster labels
+k <- 4   # you can try 3, 4, 5 and see what makes sense
+driver_season$cluster <- factor(cutree(hc_complete, k = k))
+
+table(driver_season$cluster)
+
+# plot: avg qualifying vs avg finish, coloured by cluster
+
+ggplot(driver_season, aes(x = avg_quali_pos, y = avg_finish_pos, colour = cluster)) + geom_point() +
+  scale_x_reverse() +   
+  scale_y_reverse() +   
+  labs(x = "Average qualifying position (1 = best)", y = "Average finishing position (1 = best)", title = "How qualifying relates to race results (F1 driver seasons)", colour = "Cluster") 
+
+
+# make a simple quali group 
+
+driver_season$quali_group <- "Back"
+driver_season$quali_group[driver_season$avg_quali_pos <= 10] <- "Mid"
+driver_season$quali_group[driver_season$avg_quali_pos <= 5]  <- "Front"
 ```
 
 ### Interpretation 
-[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
- Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
-crystal clear what is being displayed in the graph and what the main takeaways are?
+For the first scatterplot, each dot is one driver in one season. On the x-axis I plotted the driver’s average qualifying position for that year, and on the y-axis I plotted their average finishing position. Both axes are reversed so that 1 (best) is at the top-right. I used the cluster labels from my hierarchical clustering to colour the points. The cloud of points lies roughly along a diagonal line: seasons where a driver usually qualifies near the front also tend to be seasons where they finish near the front, and seasons with poor qualifying are usually seasons with poor results. The different colours just break this overall pattern into groups. One cluster is mostly “front-running” seasons, where drivers qualify well and also finish well. Another cluster contains “backmarker” seasons, where drivers tend to start and finish near the back. The other clusters are more like midfield seasons. You can also see that some points sit a little above or below the main diagonal, which are seasons where drivers slightly under or over perform their usual qualifying position on race day.
 
 
 ### Visualization 2
 
-[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+For the second visualization, I plot the density of average positions gained, defined as grid minus finish, for three qualifying groups: Front (average qualifying positions 1 to 5), Mid (6 to 10), and Back (11 or worse). Each curve shows the distribution of race-day gains or losses for that group on the same x axis, and I add a dashed vertical line at zero to mark no net change in position. This density plot is useful because it lets me compare how much drivers from different qualifying groups typically move through the field over a season, rather than just comparing single averages, and it complements the first plot by focusing specifically on raceday position changes. 
 
 ```{r}
-#graph1
+# plot 2: density of avg positions gained
+
+ggplot(driver_season, aes(x = avg_pos_change, colour = quali_group)) +
+  geom_density() +
+  geom_vline(xintercept = 0, linetype = "dashed") +
+  labs(x = "Avg positions gained (grid-finish)", y = "Density",
+       colour = "Quali group", title = "Race-day gains/losses by qualifying group")
 ```
 
 ### Interpretation 
-[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
-Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
-crystal clear what is being displayed in the graph and what the main takeaways are?
+For the second graph, I wanted to look more directly at how much drivers move up or down in races depending on how they usually qualify. I first created a simple variable that puts each driver-season into one of three qualifying groups based on their average qualifying position: “Front” (positions 1 to 5), “Mid” (6 to 10), and “Back” (11+). Then I plotted the density of average positions gained (grid - finish) for each group on the same x axis, and added a dashed vertical line at 0. Values to the right of 0 mean the driver tends to gain places; values to the left mean they usually lose places. The curves show that 'back of the grid' drivers are generally shifted to the right of 0, so they tend to make up a couple of spots during the race. The front and mid groups are more centred around 0 or slightly to the left, which means that when you already start near the front, you do not usually gain a lot of positions and sometimes lose a bit instead. Together, these two graphs show that qualifying is very strongly related to where you finish overall, and that drivers who start further back have more room to gain spots, but they still usually do not end up matching the results of the consistently strong qualifiers
+
 
 ### Conclusion
 
-Does the report provide some clear conclusions that can be made from their
-graphs and analyses?
-• Detailed item (0 to 6). What is the accuracy of the claims being made? Are the claims well-supported
-by the graphs and analyses presented? Are the conclusions well-aligned with the research questions of
-the project?
+Taken together, my two graphs show that qualifying performance is very strongly connected to final race outcomes, but not in a completely deterministic way. The clustered scatterplot demonstrates a clear upward relationship between average qualifying position and average finishing position: seasons where drivers usually start near the front also tend to be seasons where they finish near the front, and seasons with poor qualifying are usually seasons with poor results. The clusters highlight distinct groups of seasons that match F1 intuition: front-running seasons, midfield seasons, and backmarker seasons.
+
+The density plot adds more nuance by looking at how many positions drivers typically gain or lose on race day. Drivers who usually qualify at the back tend to gain a few places on average, while front and mid-field qualifiers are centred around zero or slightly negative changes, meaning they mostly hold position or lose a little. This supports the idea that qualifying matters a lot: starting ahead gives a strong baseline advantage, and even though drivers starting further back can move forward, they rarely 'erase' the gap to consistently strong qualifiers over a full season.
 
 ### Further Research
 
-Does the report discuss questions that have not been answered by the
-project, but could be answered with future work?
-• Detailed item (0 to 4). Did the team provide adequate reasons as to why these questions were left as
-future work (e.g., they need more data, need more nuanced statistical techniques they haven’t learned,
-etc.)? Are these future-work questions well-motivated given what the team has completed for this
-project?
+Further research on this question could look at qualifying and race outcomes with more formal models rather than just summaries and plots. For example, we could fit a regression model with finishing position or points as the response and grid position as a predictor, while also controlling for team, circuit, and season to separate the effect of qualifying from car and track differences. Another extension would be to move from season averages to race by race data, to see how the qualifying-finish relationship changes across different circuits or eras. These ideas would likely require more detailed modelling and additional variables than we used in this project, so we treat them as directions for future work rather than part of the current analysis.
 
 ***
 ***
