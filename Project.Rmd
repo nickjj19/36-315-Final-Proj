@@ -38,10 +38,9 @@ In this project, we use historical F1 data to take a broader view of performance
 
 ### Dataset Description
 
-We use the Formula 1 World Championship dataset from Kaggle. The main tables we use are:
+We use the Formula 1 World Championship dataset from Kaggle, which compiles results from many seasons of Grands Prix. The data are spread across several csv files that link together through IDs like raceId, driverId, constructorId and circuitId. The main file for race outcomes is results.csv, where each row represents one driver in one race and includes their grid position, finishing position, points, team and a status code. Race level details such as the year, round, race name and circuit come races.csv. Driver information (name, 3 letter code, nationality) is stored in driver.csv and team information is in constructors.csv. 
 
-*insert table 
-
+For our specific questions, we also use more detailed files. lap_times.csv has one row per driver-lap and gives us lap times so we can study how pace changes over a race. pit_stops.csv has one row per pit stop with the lap and duration of the stop, which we use to look at pit strategy. Finally, status.csv translates the status codes in the results into readable labels such as 'Finished', 'Engine', or 'Accident', which lets us analyze realibility. Together, these files lets us build race-level, driver-season, lap-level, pit stop-level datasets that are easy to work with for our specific research questions. 
 
 ### Research Questions
 
