@@ -42,6 +42,8 @@ We use the Formula 1 World Championship dataset from Kaggle, which compiles resu
 
 For our specific questions, we also use more detailed files. lap_times.csv has one row per driver-lap and gives us lap times so we can study how pace changes over a race. pit_stops.csv has one row per pit stop with the lap and duration of the stop, which we use to look at pit strategy. Finally, status.csv translates the status codes in the results into readable labels such as 'Finished', 'Engine', or 'Accident', which lets us analyze realibility. Together, these files lets us build race-level, driver-season, lap-level, pit stop-level datasets that are easy to work with for our specific research questions. 
 
+Link: https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020
+
 ### Research Questions
 
 Detailed item (rated 0 to 5). What is the quality of the research questions? Are they well-motivated by
@@ -212,7 +214,7 @@ A Time Series Plot is appropriate for answering the question: in race 1 in the d
 library(ggplot2)
 library(tidyverse)
 
-laps <- read_csv("/Users/sohumwalavalkar/Downloads/lap_times.csv")
+laps <- read_csv("lap_times.csv")
 
 race1 <- laps %>% filter(raceId == 1)
 
