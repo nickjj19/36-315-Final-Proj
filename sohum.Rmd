@@ -19,7 +19,7 @@ ggplot(race1, aes(x = lap, y = milliseconds, color = as.factor(driverId))) +
   labs(
     title = "Time Series Plot of Lap Time by Driver (Race 1)",
     x = "Lap Number",
-    y = "Lap Time in ms)"
+    y = "Lap Time (ms)"
   )
 
 ggplot(race1, aes(x = as.factor(driverId), y = milliseconds)) +
@@ -32,7 +32,6 @@ ggplot(race1, aes(x = as.factor(driverId), y = milliseconds)) +
 
 anova_model <- aov(milliseconds ~ as.factor(race1$driverId), data = race1)
 
-# View ANOVA table
 summary(anova_model)
 
 ```
