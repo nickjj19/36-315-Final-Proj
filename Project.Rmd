@@ -399,60 +399,103 @@ Further research on this question could look at qualifying and race outcomes wit
 # Research Question 4: 
 
 ### Motivation
-[PUT YOUR ANSWER HERE: 1 short paragraph connecting RQ1 to the real-world / scientific context.]
+In a sport where everything is down to extreme precisions, one of the sources of error that cannheot fully be accounted for is the influence of pitstops. No matter how much a pit crew practices, errors are bound to happen and can cause race-changing events. The main goal of this question is to see if long pit-stops can end up influencing the outcomes of not only the race, but the season's outcome.
 
 ### Visualization 1
 Detailed item (0 to 5). What is the quality of these graphs? Are these graphs easily readable,
-interpretable, and properly labeled?
-• Detailed item (0 to 5). Are the graphs well-motivated, given the research questions of the project?
-In other words, do the graphs address/answer the research questions of the project, or do they only
-provide tangential (or even irrelevant) details?
-[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
-
+This is a heatmap that looks at the results that drivers got in individual races and in the seasons. The y axis represents the driver's season finish while the x axis examines the driver's race finish. The colors indicate the average pitstop times for each of the drivers final finish. This visualization is more of a summary visualization that gives more of the broader picture overall rather than specific details.
 ```{r}
-#graph1
+pitstops <- read.csv('pit_stops.csv')
+results <- read.csv('results.csv')
+drivers <- read.csv('driver_standings.csv')
+f1_data <- pitstops %>%
+  # Select from pitstops
+  select(driverId, raceId, duration) %>%
+  # Join race results (race finish position)
+  left_join(
+    results %>% 
+      select(driverId, raceId, race_finish = position),
+    by = c("driverId", "raceId")
+  ) %>%
+  left_join(
+    drivers %>%
+      select(driverId, raceId, season_finish = position),
+    by = c("driverId", "raceId")
+  )
+
+library(dplyr)
+library(ggplot2)
+f1_data <- f1_data %>%
+  mutate(race_finish = as.numeric(race_finish),
+         season_finish = as.numeric(season_finish),
+         duration = as.numeric(duration))
+
+heatmap_df <- f1_data %>%
+  group_by(season_finish, race_finish) %>%
+  summarize(avg_duration = mean(duration, na.rm = TRUE), .groups = "drop") 
+```
+```{r}
+ggplot(heatmap_df, aes(x = race_finish, y = season_finish, fill = avg_duration)) +
+  geom_tile(color = "white") +
+  scale_fill_viridis_c(option = "plasma", name = "Avg Pitstop (s)") +
+  labs(
+    title = "Pitstop Duration vs Race Finish and Season Finish",
+    x = "Race Finish Position",
+    y = "Season Finish Position"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    text = element_text(size = 12)
+  )
 ```
 
 ### Interpretation 
-[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
- Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
-crystal clear what is being displayed in the graph and what the main takeaways are?
+The main takeaway from this graph is that there is a relationship between pitstop times and race finishes. Additionally, there seems to be somewhat of a weak correlation between the overall season finish and the race finish position as most of the occurences of the lowest pitstop time averages typically occured for teams that finished 10th place or above. Additionally, it is notable that average pitstop times are relatively consistent as shown by the fact that most of the field is within the same volet to purple color range, indicating a sub 25 second pitstop.
 
 
 ### Visualization 2
 
-[[PUT YOUR ANSWER HERE: describe the variables and justify graph choice.]]
+This is a scatter plot that looks at the same variables as the previous graph. However, since this is a scatterplot, the details are a lot more specific. The x axis represents that pitstop dxuration, the y axis represents the overall season finish of the driver, and the color of the point indicates how the driver finished that season.
 
 ```{r}
-#graph1
+ggplot(f1_data, aes(x = duration, y = race_finish, color = season_finish)) +
+  geom_point(alpha = 0.7) +
+  scale_y_reverse() +  # P1 is best, so reverse axis for intuitive direction
+  scale_color_viridis_c(option = "plasma", direction = -1) +
+  labs(
+    title = "Impact of Pit Stop Duration on Race Result and Season Finish",
+    x = "Pit Stop Duration (seconds)",
+    y = "Race Finish Position",
+    color = "Season Finish"
+  )
 ```
 
 ### Interpretation 
-[PUT YOUR ANSWER HERE: additional interpretation, if applicable.]
-Detailed item (0 to 4). What is the quality of these descriptions? After reading these descriptions, is it
-crystal clear what is being displayed in the graph and what the main takeaways are?
+Overall, we can gain similar insights from this visualizaation. However, the main difference is that it is more specific, given that specific  data points of the pitstop times are graphed rather than being binned. From this graph, we can see a more definitive positive relationship between race finish and pitstop time. This is to be expected. However, by comparison, we can see that the influence of pitstop times on the overall season finish of a driver is a lot weaker. For the most part, the pitstop times are spread relatively equally when looking at it from the perspective of the y - axis while there is an obvious vertial spread that correlates race finish and pit stop time. 
 
 ### Conclusion
 
-Does the report provide some clear conclusions that can be made from their
-graphs and analyses?
-• Detailed item (0 to 6). What is the accuracy of the claims being made? Are the claims well-supported
-by the graphs and analyses presented? Are the conclusions well-aligned with the research questions of
-the project?
+Overall, while there is definitely a relationship between pitstop times and race finish, there is little to no relationship between pitstop times and season finishes. The scatterplot gives a better view on the relationship between pitstop times and race finishes while the heat map gives a better idea of the potential relationship between pitstop times and season finishes. However, since the relationship is so weak, it suggests that is typically not likely for pitstops to have a lasting impact on the rest of the overall season as other factors seem to outweigh performance hindrances that come from slow pitstops when looking at the season as a whole.
 
 ### Further Research
 
-Does the report discuss questions that have not been answered by the
-project, but could be answered with future work?
-• Detailed item (0 to 4). Did the team provide adequate reasons as to why these questions were left as
-future work (e.g., they need more data, need more nuanced statistical techniques they haven’t learned,
-etc.)? Are these future-work questions well-motivated given what the team has completed for this
-project?
+Something that could potentially help answer this question in the future is looking at the relationship between pitstop times and season finish on constructor by constructor basis rather than a driver by driver basis. Additionally, since so much of performance is associated by the money and budget of teams, including pitstop performances, a possible future inquiry could be looking at the relationship between a team's budget and their continuous pitstop performance. This could explain whether the weak relationship between pitstop times and overall season finish is more indicative of a team's budget being reflected through their pitstop times or if it is actually the root cause of the influence. 
 
 ***
 ***
 
 # Wrapping up
+To recap, the following were our research questions:
+1. How have race pace and reliability changed over time across eras?
+2. How do drivers' lap time change over the course of a race?
+3. Howe does qualifying performance affect final race outcomes?
+4. How do pitstop duration influence race finishes and season rankings?
+We found that while there has been an overall increase in reliability over time in F1, the newer, smaller engines lack in race pace compared to older era engines that were larger.
+
+Additionally, there is a strong relationship between qualifying and final race finish. Not only is there is a clear relationship between how drivers end up finishing based on their qualifying position, but the general trend is that backmarkers typically overtake a few positions, but the vast majority of leading and midfield cars gain little to no position, some losing a position or two.
+
+Finally, there is a clear relationship between pitstop times and final race finishes. However, whether there is a relationship between pitstop times and overall season finish is less clear.
 
 
 
