@@ -497,6 +497,9 @@ Additionally, there is a strong relationship between qualifying and final race f
 
 Finally, there is a clear relationship between pitstop times and final race finishes. However, whether there is a relationship between pitstop times and overall season finish is less clear.
 
+# Future Research
+Future research across these projects could benefit from expanding the scope of the data, incorporating additional variables, and applying more advanced modeling techniques. While our analyses provide useful initial insight, each is limited by narrow datasets—such as focusing only on DNF counts and fastest laps for reliability and race pace, examining only Race 1, relying on winner-only pace data, or evaluating pit stops at the driver rather than constructor level. Future work could incorporate richer contextual factors such as weather, tire strategy, circuit characteristics, detailed DNF causes, and team spending.Additional inquiry into team-level factors, including budgets and resource allocation, could also clarify whether observed patterns in pit stop performance and season results stem from operational execution or underlying financial disparities.
+
 
 
 
