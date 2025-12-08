@@ -46,12 +46,6 @@ Link: https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950
 
 ### Research Questions
 
-Detailed item (rated 0 to 5). What is the quality of the research questions? Are they well-motivated by
-real-world/scientific interests? Or are they shallow? For example, a very shallow question would be
-in the form, “what does the distribution of this variable look like?” - three questions like this would
-guarantee 0pts for this item. A more interesting question would motivate why we would like to inspect
-particular distributions with real-world context.
-
 **RQ1: How have race pace and reliability changed over time across eras?**
 
 **RQ2: How Do Drivers’ Lap Times Change Over the Course of a Race?**
