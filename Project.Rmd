@@ -1,12 +1,14 @@
 ---
 title: "The Evolution of Speed and Performance in Formula 1"
 output:
+  pdf_document:
+    toc: true
   html_document:
-    self_contained: yes
-    toc: yes
-    toc_float: yes
+    self_contained: true
+    toc: true
+    toc_float: true
     code_folding: hide
-    df_print: "default"
+    df_print: default
 urlcolor: blue
 ---
 
@@ -40,11 +42,12 @@ In this project, we use historical F1 data to take a broader view of performance
 
 We use the Formula 1 World Championship dataset from Kaggle, which compiles results from many seasons of Grands Prix. The data are spread across several csv files that link together through IDs like raceId, driverId, constructorId and circuitId. The main file for race outcomes is results.csv, where each row represents one driver in one race and includes their grid position, finishing position, points, team and a status code. Race level details such as the year, round, race name and circuit come races.csv. Driver information (name, 3 letter code, nationality) is stored in driver.csv and team information is in constructors.csv. 
 
-For our specific questions, we also use more detailed files. lap_times.csv has one row per driver-lap and gives us lap times so we can study how pace changes over a race. pit_stops.csv has one row per pit stop with the lap and duration of the stop, which we use to look at pit strategy. Finally, status.csv translates the status codes in the results into readable labels such as 'Finished', 'Engine', or 'Accident', which lets us analyze realibility. Together, these files lets us build race-level, driver-season, lap-level, pit stop-level datasets that are easy to work with for our specific research questions. 
+For our specific questions, we also use more detailed files. lap_times.csv has one row per driver-lap and gives us lap times so we can study how pace changes over a race. pit_stops.csv has one row per pit stop with the lap and duration of the stop, which we use to look at pit strategy. Finally, status.csv translates the status codes in the results into readable labels such as 'Finished', 'Engine', or 'Accident', which lets us analyze reliability. Together, these files lets us build race-level, driver-season, lap-level, pit stop-level datasets that are easy to work with for our specific research questions. 
 
 Link: https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950-2020
 
 ### Research Questions
+Below is the list of our research questions we will be addressing throughout this report. We will be focusing on different aspects of Formula 1 that influences the performance of the cars/drivers.
 
 **RQ1: How have race pace and reliability changed over time across eras?**
 
@@ -61,7 +64,7 @@ Link: https://www.kaggle.com/datasets/rohanrao/formula-1-world-championship-1950
 # Research Question 1: How have race pace and reliability changed over time across eras?
 
 ### Motivation
-In Formula 1, both race pace and reliability largely dictate how each driver performs. The faster the race pace, the faster the driver can drive, which increases their chance of winning. On the other hand, reliability is also a critical factor as cars need to be able to finish the race without problems that would interfere with the driving. Therefore, it would be worthwhile for us to investigate these two factor and how they evolve over time as teams adopt new engine regulations and introduce new technologies. Because engine eras are strongly tied to performance and durability, studying how fastest-lap speeds and DNF (Did Not Finish) rates change across eras would help us understand whether newer regulations made cars faster or more reliable. This is espcially interesting as F1 is making a transtion from bigger more powerful engine to a smaller engine that features more technonology and more friendly to the environment. Thus, the two graphs below would help us understand how reliability and race has evolved over time.
+In Formula 1, both race pace and reliability largely dictate how each driver performs. The faster the race pace, the faster the driver can drive, which increases their chance of winning. On the other hand, reliability is also a critical factor as cars need to be able to finish the race without problems that would interfere with the driving. Therefore, it would be worthwhile for us to investigate these two factor and how they evolve over time as teams adopt new engine regulations and introduce new technologies. Because engine eras are strongly tied to performance and durability, studying how fastest-lap speeds and DNF (Did Not Finish) rates change across eras would help us understand whether newer regulations made cars faster or more reliable. This is especially interesting as F1 is making a transtion from bigger more powerful engine to a smaller engine that features more technonology and more friendly to the environment. Thus, the two graphs below would help us understand how reliability and race has evolved over time.
 
 Note: for this question, we will only focus on 1989 - 2024 even though the dataset has information starting from 1950. This is because the data for fastest lap, which is used to interpret the race pace section, does not have data before 1989. Thus, to make the eras consistent for the two graphs, we will focus on 1989-2024 or the "modern era".
 
@@ -390,13 +393,12 @@ Further research on this question could look at qualifying and race outcomes wit
 ***
 ***
 
-# Research Question 4: 
+# Research Question 4: How Do Pit Stop Durations Influence Race Finishes and Season Rankings?
 
 ### Motivation
 In a sport where everything is down to extreme precisions, one of the sources of error that cannheot fully be accounted for is the influence of pitstops. No matter how much a pit crew practices, errors are bound to happen and can cause race-changing events. The main goal of this question is to see if long pit-stops can end up influencing the outcomes of not only the race, but the season's outcome.
 
 ### Visualization 1
-Detailed item (0 to 5). What is the quality of these graphs? Are these graphs easily readable,
 This is a heatmap that looks at the results that drivers got in individual races and in the seasons. The y axis represents the driver's season finish while the x axis examines the driver's race finish. The colors indicate the average pitstop times for each of the drivers final finish. This visualization is more of a summary visualization that gives more of the broader picture overall rather than specific details.
 ```{r}
 pitstops <- read.csv('pit_stops.csv')
@@ -481,11 +483,15 @@ Something that could potentially help answer this question in the future is look
 
 # Wrapping up
 To recap, the following were our research questions:
+
 1. How have race pace and reliability changed over time across eras?
 2. How do drivers' lap time change over the course of a race?
 3. Howe does qualifying performance affect final race outcomes?
 4. How do pitstop duration influence race finishes and season rankings?
+
 We found that while there has been an overall increase in reliability over time in F1, the newer, smaller engines lack in race pace compared to older era engines that were larger.
+
+Secondly, drivers’ lap times in Race 1 are broadly similar and change in predictable patterns, with brief spikes likely due to pit stops or incidents, and no statistically significant differences in mean lap times across drivers.
 
 Additionally, there is a strong relationship between qualifying and final race finish. Not only is there is a clear relationship between how drivers end up finishing based on their qualifying position, but the general trend is that backmarkers typically overtake a few positions, but the vast majority of leading and midfield cars gain little to no position, some losing a position or two.
 
